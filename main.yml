@@ -1,0 +1,47 @@
+---
+- name: Setup dev box 
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Verify SSH keys are in place 
+      include_tasks: check_ssh_keys.yml
+
+    - name: Install packages 
+      become: yes
+      block:
+        - include_tasks: packages.yml
+
+    - name: Ensure ~/Apps directory exists
+      become: yes
+      ansible.builtin.file:
+        path: "/home/stephen/Apps"
+        state: directory
+        owner: stephen
+        group: stephen
+        mode: '0755'
+
+    - name: Clone usr-local-bin scripts
+      git:
+        repo: 'git@github.com:stephenfairchild/usr-local-bin.git'
+        dest: '/home/stephen/Apps/usr-local-bin'
+        clone: yes
+        update: yes
+
+    - name: Change the shell to Zsh 
+      become: yes
+      command:
+        cmd: chsh -s /bin/zsh stephen 
+
+    - name: Remove bash defaults 
+      command:
+        cmd: rm -rvf ~/.bashrc ~/.bash_history
+
+    - name: Install Dotfiles 
+      include_tasks: dotfiles.yml
+
+    - name: Install Node 
+      include_tasks: install_node.yml
+
+    - name: Install Fonts 
+      include_tasks: fonts.yml
+

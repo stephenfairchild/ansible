@@ -1,0 +1,33 @@
+- name: Refresh Zypper repositories
+  command: zypper refresh
+
+- name: Install packages
+  zypper:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - zsh
+    - tmux 
+    - sed
+    - openssl
+    - git
+    - curl
+    - wget
+    - man 
+    - man-pages
+    - go
+    - bat
+    - kitty 
+    - tmate
+    - aws-cli
+    - diff-so-fancy
+    - the_silver_searcher
+    - xclip
+    - docker
+    - docker-compose
+    - htop
+    - netcat
+    - dmenu
+    - jq
+    - fzf
+    - starship

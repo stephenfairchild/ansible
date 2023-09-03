@@ -1,0 +1,16 @@
+- name: Clone Nerd Fonts 
+  git:
+    repo: 'https://github.com/ronniedroid/getnf.git'
+    dest: '/home/stephen/getnf'
+    clone: yes
+    update: yes
+
+- name: Install fonts
+  command:
+    cmd: ./install.sh
+  args:
+    chdir: /home/stephen/getnf
+
+- name: Cleanup
+  command:
+    cmd: rm -rvf /home/stephen/getnf

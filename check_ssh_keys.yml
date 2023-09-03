@@ -1,0 +1,32 @@
+---
+- name: Check if id_rsa exists
+  stat:
+    path: "~/.ssh/id_rsa"
+  register: id_rsa_result
+
+- name: Check if id_rsa.pem exists
+  stat:
+    path: "~/.ssh/id_rsa.pem"
+  register: id_rsa_pem_result
+
+- name: Report if id_rsa is missing
+  debug:
+    msg: "id_rsa does not exist!"
+  when: not id_rsa_result.stat.exists
+
+- name: Report if id_rsa.pem is missing
+  debug:
+    msg: "id_rsa.pub does not exist!"
+  when: not id_rsa_pem_result.stat.exists
+
+- name: Set private key permissions
+  become: true
+  ansible.builtin.file:
+    path: "/home/stephen/.ssh/id_rsa"
+    mode: '0600'
+
+- name: Set public key permissions
+  become: true
+  ansible.builtin.file:
+    path: "/home/stephen/.ssh/id_rsa.pem"
+    mode: '0644'

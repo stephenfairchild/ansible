@@ -1,0 +1,24 @@
+---
+- name: Ensure ~/.homesick/repos directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.homesick/repos"
+    state: directory
+    mode: '0755'
+
+- name: Clone homeshick repository
+  ansible.builtin.git:
+    repo: 'https://github.com/andsens/homeshick.git'
+    dest: "{{ ansible_env.HOME }}/.homesick/repos/homeshick"
+
+- name: Clone Dotfiles using homeshick
+  ansible.builtin.shell: "{{ ansible_env.HOME }}/.homesick/repos/homeshick/bin/homeshick clone -b git@github.com:stephenfairchild/Dotfiles.git"
+  args:
+    executable: /bin/zsh
+    creates: "{{ ansible_env.HOME }}/.homesick/repos/Dotfiles"
+
+
+- name: Link Dotfiles using homeshick
+  ansible.builtin.shell: "{{ ansible_env.HOME }}/.homesick/repos/homeshick/bin/homeshick link -b"
+  args:
+    executable: /bin/zsh
+
